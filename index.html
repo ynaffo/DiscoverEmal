@@ -357,23 +357,6 @@
                 <nav class="flex space-x-8">
                     <a href="https://chat.whatsapp.com/JI2ckZBw62wFfFSNrunyFj?mode=ems_copy_c" class="text-white hover:text-red-400 transition-colors font-medium">Whatsapp community</a>
                 </nav>
-                <div class="md:hidden relative">
-                    <button onclick="toggleMobileMenu()" class="text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                    <div id="mobileMenu" class="absolute top-12 right-0 glass-card p-6 rounded-xl hidden min-w-56 border border-red-500/20 shadow-2xl">
-                        <a href="https://chat.whatsapp.com/JI2ckZBw62wFfFSNrunyFj?mode=ems_copy_c" target="_blank" class="flex items-center space-x-4 text-white hover:text-red-400 transition-all duration-300 p-3 rounded-lg hover:bg-red-500/10">
-                            <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
-                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-                                </svg>
-                            </div>
-                            <span class="font-medium">Whatsapp community</span>
-                        </a>
-                    </div>
-                </div>
             </div>
         </header>
 
@@ -1043,8 +1026,8 @@
 
         function toggleMobileMenu() {
             // This function is no longer used but kept in case you want to re-add the menu later.
-            const menu = document.getElementById('mobileMenu');
-            if(menu) menu.classList.toggle('hidden');
+            const menu = document.getElementById('mobileMenu'); // This element no longer exists
+            if(menu) menu.classList.toggle('hidden'); // This line will do nothing
         }
 
         function showFinalModal() {
@@ -1187,7 +1170,7 @@
             document.getElementById('finalModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeFinalModal(); });
 
             document.addEventListener('click', (e) => {
-                const menu = document.getElementById('mobileMenu');
+                const menu = document.getElementById('mobileMenu'); // This element no longer exists
                 if (menu && !e.target.closest('button[onclick="toggleMobileMenu()"]') && !menu.contains(e.target)) {
                     menu.classList.add('hidden');
                 }
