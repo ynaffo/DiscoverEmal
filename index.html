@@ -1126,64 +1126,46 @@
             }, 4000);
         }
 
-        // --- Main script execution after DOM is loaded ---
-        document.addEventListener('DOMContentLoaded', function() {
+        // Event Listeners
+        document.getElementById('discoverModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDiscoverModal();
+        });
+
+        document.getElementById('finalModal').addEventListener('click', function(e) {
+            if (e.target === this) closeFinalModal();
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobileMenu');
+            const button = e.target.closest('button[onclick="toggleMobileMenu()"]');
             
-            // Populate country code select
+            if (!button && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+        
+        // Populate country code select and Enter-to-submit
+        document.addEventListener('DOMContentLoaded', function() {
             const select = document.getElementById('countryCode');
             if (select) {
                 select.innerHTML = '<option value="" disabled selected>Select code</option>' +
                     dialingPlans.map(p => `<option value="${p.code}">${p.code} ${p.country}</option>`).join('');
             }
+        });
 
-            // Theme switcher logic
-            const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn');
-            
-            const applyTheme = (theme) => {
-                const darkIcons = document.querySelectorAll('.theme-toggle-dark-icon');
-                const lightIcons = document.querySelectorAll('.theme-toggle-light-icon');
-                if (theme === 'light') {
-                    document.documentElement.classList.add('neon-light');
-                    lightIcons.forEach(icon => icon.classList.remove('hidden'));
-                    darkIcons.forEach(icon => icon.classList.add('hidden'));
-                } else {
-                    document.documentElement.classList.remove('neon-light');
-                    lightIcons.forEach(icon => icon.classList.add('hidden'));
-                    darkIcons.forEach(icon => icon.classList.remove('hidden'));
-                }
-            };
-
-            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-            applyTheme(savedTheme);
-
-            themeToggleBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const isLight = document.documentElement.classList.contains('neon-light');
-                    const newTheme = isLight ? 'dark' : 'light';
-                    localStorage.setItem('theme', newTheme);
-                    applyTheme(newTheme);
-                });
-            });
-
-            // Event Listeners for modals
-            document.getElementById('discoverModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeDiscoverModal(); });
-            document.getElementById('finalModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeFinalModal(); });
-
-            // Handle 'Enter' key submission in modals
-            document.addEventListener('keydown', (e) => {
-                if (e.key !== 'Enter') return;
-                
-                const discoverModal = document.getElementById('discoverModal');
-                const finalModal = document.getElementById('finalModal');
-
-                if (discoverModal && !discoverModal.classList.contains('hidden')) {
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const discoverOpen = !document.getElementById('discoverModal').classList.contains('hidden');
+                const finalOpen = !document.getElementById('finalModal').classList.contains('hidden');
+                if (discoverOpen) {
                     e.preventDefault();
                     joinWaitlistAndShowFeatures();
-                } else if (finalModal && !finalModal.classList.contains('hidden')) {
+                } else if (finalOpen) {
                     e.preventDefault();
                     joinFinalWaitlist();
                 }
-            });
+            }
         });
 
     </script>
