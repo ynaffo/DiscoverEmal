@@ -357,6 +357,23 @@
                 <nav class="flex space-x-8">
                     <a href="https://chat.whatsapp.com/JI2ckZBw62wFfFSNrunyFj?mode=ems_copy_c" class="text-white hover:text-red-400 transition-colors font-medium">Whatsapp community</a>
                 </nav>
+                <div class="md:hidden relative">
+                    <button onclick="toggleMobileMenu()" class="text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div id="mobileMenu" class="absolute top-12 right-0 glass-card p-6 rounded-xl hidden min-w-56 border border-red-500/20 shadow-2xl">
+                        <a href="https://chat.whatsapp.com/JI2ckZBw62wFfFSNrunyFj?mode=ems_copy_c" target="_blank" class="flex items-center space-x-4 text-white hover:text-red-400 transition-all duration-300 p-3 rounded-lg hover:bg-red-500/10">
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                </svg>
+                            </div>
+                            <span class="font-medium">Whatsapp community</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -1126,46 +1143,71 @@
             }, 4000);
         }
 
-        // Event Listeners
-        document.getElementById('discoverModal').addEventListener('click', function(e) {
-            if (e.target === this) closeDiscoverModal();
-        });
-
-        document.getElementById('finalModal').addEventListener('click', function(e) {
-            if (e.target === this) closeFinalModal();
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(e) {
-            const menu = document.getElementById('mobileMenu');
-            const button = e.target.closest('button[onclick="toggleMobileMenu()"]');
-            
-            if (!button && !menu.contains(e.target)) {
-                menu.classList.add('hidden');
-            }
-        });
-        
-        // Populate country code select and Enter-to-submit
+        // --- Main script execution after DOM is loaded ---
         document.addEventListener('DOMContentLoaded', function() {
+            
+            // Populate country code select
             const select = document.getElementById('countryCode');
             if (select) {
                 select.innerHTML = '<option value="" disabled selected>Select code</option>' +
                     dialingPlans.map(p => `<option value="${p.code}">${p.code} ${p.country}</option>`).join('');
             }
-        });
 
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const discoverOpen = !document.getElementById('discoverModal').classList.contains('hidden');
-                const finalOpen = !document.getElementById('finalModal').classList.contains('hidden');
-                if (discoverOpen) {
+            // Theme switcher logic
+            const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn');
+            
+            const applyTheme = (theme) => {
+                const darkIcons = document.querySelectorAll('.theme-toggle-dark-icon');
+                const lightIcons = document.querySelectorAll('.theme-toggle-light-icon');
+                if (theme === 'light') {
+                    document.documentElement.classList.add('neon-light');
+                    lightIcons.forEach(icon => icon.classList.remove('hidden'));
+                    darkIcons.forEach(icon => icon.classList.add('hidden'));
+                } else {
+                    document.documentElement.classList.remove('neon-light');
+                    lightIcons.forEach(icon => icon.classList.add('hidden'));
+                    darkIcons.forEach(icon => icon.classList.remove('hidden'));
+                }
+            };
+
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            applyTheme(savedTheme);
+
+            themeToggleBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const isLight = document.documentElement.classList.contains('neon-light');
+                    const newTheme = isLight ? 'dark' : 'light';
+                    localStorage.setItem('theme', newTheme);
+                    applyTheme(newTheme);
+                });
+            });
+
+            // Event Listeners for modals and menus
+            document.getElementById('discoverModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeDiscoverModal(); });
+            document.getElementById('finalModal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeFinalModal(); });
+
+            document.addEventListener('click', (e) => {
+                const menu = document.getElementById('mobileMenu');
+                if (menu && !e.target.closest('button[onclick="toggleMobileMenu()"]') && !menu.contains(e.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+
+            // Handle 'Enter' key submission in modals
+            document.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter') return;
+                
+                const discoverModal = document.getElementById('discoverModal');
+                const finalModal = document.getElementById('finalModal');
+
+                if (discoverModal && !discoverModal.classList.contains('hidden')) {
                     e.preventDefault();
                     joinWaitlistAndShowFeatures();
-                } else if (finalOpen) {
+                } else if (finalModal && !finalModal.classList.contains('hidden')) {
                     e.preventDefault();
                     joinFinalWaitlist();
                 }
-            }
+            });
         });
 
     </script>
