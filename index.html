@@ -55,6 +55,7 @@
         .neon-bg {
             background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0f 50%, #0a0a0a 100%);
             position: relative;
+            z-index: 1;
         }
         
         .neon-bg::before {
@@ -342,7 +343,7 @@
     <!-- Page d'accueil -->
     <div id="homePage" class="min-h-screen neon-bg">
         <!-- Header -->
-        <header class="relative z-50 py-6">
+        <header class="relative z-20 py-6">
             <div class="container mx-auto px-6 flex justify-between items-center">
                 <div class="flex items-center space-x-3">
                     <div class="flex items-center space-x-4">
@@ -553,7 +554,7 @@
     <!-- Features Page -->
     <div id="featuresPage" class="min-h-screen neon-bg hidden">
         <!-- Header (Re-added for consistent navigation and theme switching) -->
-        <header class="relative z-50 py-6">
+        <header class="relative z-20 py-6">
             <div class="container mx-auto px-6 flex justify-between items-center">
                 <div class="flex items-center space-x-3">
                     <div class="flex items-center space-x-4">
